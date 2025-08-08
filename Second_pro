@@ -1,0 +1,314 @@
+class Node:
+    """Node class for the linked list"""
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    """Comprehensive Linked List implementation"""
+    
+    def __init__(self):
+        self.head = None
+        self.size = 0
+    
+    def insert_at_head(self, data):
+        """Insert a new node at the beginning of the list"""
+        new_node = Node(data)
+        new_node.next = self.head
+        self.head = new_node
+        self.size += 1
+    
+    def insert_at_tail(self, data):
+        """Insert a new node at the end of the list"""
+        new_node = Node(data)
+        
+        if not self.head:
+            self.head = new_node
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_node
+        
+        self.size += 1
+    
+    def insert_at(self, position, data):
+        """Insert a new node at the specified position"""
+        if position < 0 or position > self.size:
+            raise IndexError("Position out of bounds")
+        
+        if position == 0:
+            self.insert_at_head(data)
+            return
+        
+        new_node = Node(data)
+        current = self.head
+        
+        for _ in range(position - 1):
+            current = current.next
+        
+        new_node.next = current.next
+        current.next = new_node
+        self.size += 1
+    
+    def delete_by_value(self, value):
+        """Delete the first occurrence of a value"""
+        if not self.head:
+            return False
+        
+        if self.head.data == value:
+            self.head = self.head.next
+            self.size -= 1
+            return True
+        
+        current = self.head
+        while current.next and current.next.data != value:
+            current = current.next
+        
+        if current.next:
+            current.next = current.next.next
+            self.size -= 1
+            return True
+        
+        return False
+    
+    def delete_at(self, position):
+        """Delete node at the specified position"""
+        if position < 0 or position >= self.size or not self.head:
+            return False
+        
+        if position == 0:
+            self.head = self.head.next
+            self.size -= 1
+            return True
+        
+        current = self.head
+        for _ in range(position - 1):
+            current = current.next
+        
+        current.next = current.next.next
+        self.size -= 1
+        return True
+    
+    def search(self, value):
+        """Search for a value and return its position (-1 if not found)"""
+        current = self.head
+        position = 0
+        
+        while current:
+            if current.data == value:
+                return position
+            current = current.next
+            position += 1
+        
+        return -1
+    
+    def get(self, position):
+        """Get value at the specified position"""
+        if position < 0 or position >= self.size:
+            raise IndexError("Index out of bounds")
+        
+        current = self.head
+        for _ in range(position):
+            current = current.next
+        
+        return current.data
+    
+    def display(self):
+        """Display the entire list"""
+        if not self.head:
+            print("List is empty")
+            return
+        
+        elements = []
+        current = self.head
+        while current:
+            elements.append(str(current.data))
+            current = current.next
+        
+        print(" -> ".join(elements) + " -> None")
+    
+    def reverse(self):
+        """Reverse the linked list"""
+        prev = None
+        current = self.head
+        
+        while current:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+        
+        self.head = prev
+    
+    def get_size(self):
+        """Return the size of the list"""
+        return self.size
+    
+    def is_empty(self):
+        """Check if the list is empty"""
+        return self.head is None
+    
+    def clear(self):
+        """Clear all nodes from the list"""
+        self.head = None
+        self.size = 0
+    
+    def find_middle(self):
+        """Find the middle element using Floyd's two-pointer technique"""
+        if not self.head:
+            raise ValueError("List is empty")
+        
+        slow = fast = self.head
+        
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        
+        return slow.data
+    
+    def has_cycle(self):
+        """Detect if the list has a cycle using Floyd's algorithm"""
+        if not self.head:
+            return False
+        
+        slow = fast = self.head
+        
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            
+            if slow == fast:
+                return True
+        
+        return False
+    
+    def remove_duplicates(self):
+        """Remove duplicate values from the list"""
+        if not self.head:
+            return
+        
+        seen = set()
+        current = self.head
+        prev = None
+        
+        while current:
+            if current.data in seen:
+                prev.next = current.next
+                self.size -= 1
+            else:
+                seen.add(current.data)
+                prev = current
+            current = current.next
+    
+    def to_list(self):
+        """Convert linked list to Python list"""
+        result = []
+        current = self.head
+        while current:
+            result.append(current.data)
+            current = current.next
+        return result
+    
+    def from_list(self, data_list):
+        """Create linked list from Python list"""
+        self.clear()
+        for data in data_list:
+            self.insert_at_tail(data)
+    
+    def __str__(self):
+        """String representation of the list"""
+        if not self.head:
+            return "[]"
+        
+        elements = []
+        current = self.head
+        while current:
+            elements.append(str(current.data))
+            current = current.next
+        
+        return "[" + " -> ".join(elements) + "]"
+    
+    def __len__(self):
+        """Return length of the list"""
+        return self.size
+    
+    def __iter__(self):
+        """Make the list iterable"""
+        current = self.head
+        while current:
+            yield current.data
+            current = current.next
+    
+    def __contains__(self, value):
+        """Check if value exists in the list"""
+        return self.search(value) != -1
+
+# Example usage and demonstration
+def main():
+    print("=== Python Linked List Operations Demo ===\n")
+    
+    # Create a new linked list
+    ll = LinkedList()
+    
+    # Insert operations
+    print("1. Insert Operations:")
+    ll.insert_at_head(10)
+    ll.insert_at_head(20)
+    ll.insert_at_tail(30)
+    ll.insert_at_tail(40)
+    ll.insert_at(2, 25)
+    
+    print(f"After insertions: {ll}")
+    print(f"Size: {len(ll)}\n")
+    
+    # Search operations
+    print("2. Search Operations:")
+    print(f"Searching for 25: Position {ll.search(25)}")
+    print(f"Searching for 100: Position {ll.search(100)}")
+    print(f"Value at position 3: {ll.get(3)}")
+    print(f"Does list contain 30? {'Yes' if 30 in ll else 'No'}\n")
+    
+    # Delete operations
+    print("3. Delete Operations:")
+    print(f"Deleting value 25: {'Success' if ll.delete_by_value(25) else 'Failed'}")
+    print(f"After deletion: {ll}")
+    
+    print(f"Deleting at position 1: {'Success' if ll.delete_at(1) else 'Failed'}")
+    print(f"After deletion: {ll}\n")
+    
+    # Advanced operations
+    print("4. Advanced Operations:")
+    print(f"Middle element: {ll.find_middle()}")
+    print(f"Has cycle: {'Yes' if ll.has_cycle() else 'No'}")
+    
+    print("\nReversing the list...")
+    ll.reverse()
+    print(f"Reversed list: {ll}")
+    
+    # Iteration
+    print("\n5. Iteration:")
+    print("Elements using iteration:", end=" ")
+    for element in ll:
+        print(element, end=" ")
+    print()
+    
+    # List conversion
+    print("\n6. List Conversion:")
+    python_list = ll.to_list()
+    print(f"As Python list: {python_list}")
+    
+    # Create from list
+    new_ll = LinkedList()
+    new_ll.from_list([1, 2, 3, 2, 4, 2])
+    print(f"Created from list [1,2,3,2,4,2]: {new_ll}")
+    
+    print("Removing duplicates...")
+    new_ll.remove_duplicates()
+    print(f"After removing duplicates: {new_ll}")
+    
+    print(f"\nFinal size: {len(ll)}")
+    print(f"Is empty: {'Yes' if ll.is_empty() else 'No'}")
+
+if __name__ == "__main__":
+    main()
