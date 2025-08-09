@@ -91,20 +91,20 @@ class Cat extends Animal {
         System.out.println(getName() + " walks gracefully and climbs.");
     }
     
-    // Method overriding (Polymorphism)
+    
     @Override
     public void displayInfo() {
         super.displayInfo();
         System.out.println("Indoor cat: " + (isIndoor ? "Yes" : "No"));
     }
     
-    // Cat-specific method
+    
     public void purr() {
         System.out.println(getName() + " is purring contentedly.");
     }
 }
 
-// Main class to demonstrate OOP concepts
+/
 public class OOPDemo {
     public static void main(String[] args) {
         System.out.println("=== Object-Oriented Programming Demo ===\n");
@@ -113,7 +113,7 @@ public class OOPDemo {
         Dog dog = new Dog("Buddy", 3, "Golden Retriever");
         Cat cat = new Cat("Whiskers", 2, true);
         
-        // Array of Animal references (Polymorphism)
+        
         Animal[] animals = {dog, cat};
         
         System.out.println("--- Animal Information ---");
@@ -138,14 +138,14 @@ public class OOPDemo {
     }
 }
 
-// Interface for common vehicle behaviors (Abstraction)
+
 interface Drivable {
     void start();
     void stop();
     double calculateFuelCost(double distance);
 }
 
-// Abstract base class (Abstraction)
+
 abstract class Vehicle implements Drivable {
     // Protected attributes (Encapsulation)
     protected String brand;
@@ -161,13 +161,13 @@ abstract class Vehicle implements Drivable {
         this.isRunning = false;
     }
     
-    // Getter methods (Encapsulation)
+    
     public String getBrand() { return brand; }
     public String getModel() { return model; }
     public int getYear() { return year; }
     public boolean isRunning() { return isRunning; }
     
-    // Common implementation
+    
     public void start() {
         if (!isRunning) {
             isRunning = true;
@@ -186,7 +186,7 @@ abstract class Vehicle implements Drivable {
         }
     }
     
-    // Abstract method
+   
     public abstract void displaySpecs();
     
     // Method that can be overridden (Polymorphism)
@@ -195,7 +195,7 @@ abstract class Vehicle implements Drivable {
     }
 }
 
-// Inheritance: Car extends Vehicle
+
 class Car extends Vehicle {
     private int doors;
     private double fuelEfficiency; // km per liter
