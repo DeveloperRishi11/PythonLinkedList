@@ -137,3 +137,234 @@ public class OOPDemo {
         System.out.println("4. POLYMORPHISM: Same method calls produce different behaviors");
     }
 }
+
+// Interface for common vehicle behaviors (Abstraction)
+interface Drivable {
+    void start();
+    void stop();
+    double calculateFuelCost(double distance);
+}
+
+// Abstract base class (Abstraction)
+abstract class Vehicle implements Drivable {
+    // Protected attributes (Encapsulation)
+    protected String brand;
+    protected String model;
+    protected int year;
+    private boolean isRunning;
+    
+    // Constructor
+    public Vehicle(String brand, String model, int year) {
+        this.brand = brand;
+        this.model = model;
+        this.year = year;
+        this.isRunning = false;
+    }
+    
+    // Getter methods (Encapsulation)
+    public String getBrand() { return brand; }
+    public String getModel() { return model; }
+    public int getYear() { return year; }
+    public boolean isRunning() { return isRunning; }
+    
+    // Common implementation
+    public void start() {
+        if (!isRunning) {
+            isRunning = true;
+            System.out.println(brand + " " + model + " started.");
+        } else {
+            System.out.println(brand + " " + model + " is already running.");
+        }
+    }
+    
+    public void stop() {
+        if (isRunning) {
+            isRunning = false;
+            System.out.println(brand + " " + model + " stopped.");
+        } else {
+            System.out.println(brand + " " + model + " is already stopped.");
+        }
+    }
+    
+    // Abstract method
+    public abstract void displaySpecs();
+    
+    // Method that can be overridden (Polymorphism)
+    public void honk() {
+        System.out.println("Beep beep!");
+    }
+}
+
+// Inheritance: Car extends Vehicle
+class Car extends Vehicle {
+    private int doors;
+    private double fuelEfficiency; // km per liter
+    
+    public Car(String brand, String model, int year, int doors, double fuelEfficiency) {
+        super(brand, model, year);
+        this.doors = doors;
+        this.fuelEfficiency = fuelEfficiency;
+    }
+    
+    // Implementation of abstract method
+    @Override
+    public void displaySpecs() {
+        System.out.println("Car: " + brand + " " + model + " (" + year + ")");
+        System.out.println("Doors: " + doors + ", Fuel Efficiency: " + fuelEfficiency + " km/L");
+    }
+    
+    // Implementation of interface method
+    @Override
+    public double calculateFuelCost(double distance) {
+        double fuelNeeded = distance / fuelEfficiency;
+        double costPerLiter = 100.0; // ₹100 per liter
+        return fuelNeeded * costPerLiter;
+    }
+    
+    // Method overriding (Polymorphism)
+    @Override
+    public void honk() {
+        System.out.println(brand + " " + model + " honks: Honk honk!");
+    }
+}
+
+// Inheritance: Motorcycle extends Vehicle
+class Motorcycle extends Vehicle {
+    private int engineCC;
+    private double fuelEfficiency;
+    
+    public Motorcycle(String brand, String model, int year, int engineCC, double fuelEfficiency) {
+        super(brand, model, year);
+        this.engineCC = engineCC;
+        this.fuelEfficiency = fuelEfficiency;
+    }
+    
+    // Implementation of abstract method
+    @Override
+    public void displaySpecs() {
+        System.out.println("Motorcycle: " + brand + " " + model + " (" + year + ")");
+        System.out.println("Engine: " + engineCC + "CC, Fuel Efficiency: " + fuelEfficiency + " km/L");
+    }
+    
+    // Implementation of interface method
+    @Override
+    public double calculateFuelCost(double distance) {
+        double fuelNeeded = distance / fuelEfficiency;
+        double costPerLiter = 100.0; // ₹100 per liter
+        return fuelNeeded * costPerLiter;
+    }
+    
+    // Method overriding (Polymorphism)
+    @Override
+    public void honk() {
+        System.out.println(brand + " " + model + " beeps: Beep beep!");
+    }
+    
+    // Motorcycle-specific method
+    public void wheelie() {
+        if (isRunning()) {
+            System.out.println(brand + " " + model + " performs a wheelie!");
+        } else {
+            System.out.println("Start the motorcycle first to perform a wheelie.");
+        }
+    }
+}
+
+// Composition: Garage contains Vehicles
+class Garage {
+    private Vehicle[] vehicles;
+    private int capacity;
+    private int currentCount;
+    
+    public Garage(int capacity) {
+        this.capacity = capacity;
+        this.vehicles = new Vehicle[capacity];
+        this.currentCount = 0;
+    }
+    
+    public boolean addVehicle(Vehicle vehicle) {
+        if (currentCount < capacity) {
+            vehicles[currentCount] = vehicle;
+            currentCount++;
+            System.out.println("Added " + vehicle.getBrand() + " " + vehicle.getModel() + " to garage.");
+            return true;
+        } else {
+            System.out.println("Garage is full! Cannot add more vehicles.");
+            return false;
+        }
+    }
+    
+    public void showAllVehicles() {
+        System.out.println("\n--- Garage Inventory ---");
+        if (currentCount == 0) {
+            System.out.println("Garage is empty.");
+            return;
+        }
+        
+        for (int i = 0; i < currentCount; i++) {
+            vehicles[i].displaySpecs();
+            System.out.println("Status: " + (vehicles[i].isRunning() ? "Running" : "Stopped"));
+            System.out.println();
+        }
+    }
+    
+    // Polymorphism demonstration
+    public void startAllVehicles() {
+        System.out.println("--- Starting all vehicles ---");
+        for (int i = 0; i < currentCount; i++) {
+            vehicles[i].start();
+        }
+    }
+    
+    public void honkAll() {
+        System.out.println("--- All vehicles honking ---");
+        for (int i = 0; i < currentCount; i++) {
+            vehicles[i].honk(); // Polymorphic method call
+        }
+    }
+}
+
+// Main class
+public class OOPDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Java OOP Vehicle Demo ===\n");
+        
+        // Creating objects (Instantiation)
+        Car car = new Car("Toyota", "Camry", 2023, 4, 15.0);
+        Motorcycle bike = new Motorcycle("Honda", "CBR600", 2022, 600, 25.0);
+        
+        // Create garage (Composition)
+        Garage garage = new Garage(5);
+        
+        // Add vehicles to garage
+        garage.addVehicle(car);
+        garage.addVehicle(bike);
+        
+        // Display all vehicles
+        garage.showAllVehicles();
+        
+        // Demonstrate polymorphism
+        garage.startAllVehicles();
+        garage.honkAll();
+        
+        System.out.println("\n--- Fuel Cost Calculation ---");
+        double distance = 100.0; // 100 km trip
+        System.out.printf("Car fuel cost for %.0f km: ₹%.2f\n", 
+                         distance, car.calculateFuelCost(distance));
+        System.out.printf("Bike fuel cost for %.0f km: ₹%.2f\n", 
+                         distance, bike.calculateFuelCost(distance));
+        
+        System.out.println("\n--- Specific Behaviors ---");
+        bike.wheelie(); // Won't work - bike not started
+        bike.start();
+        bike.wheelie(); // Now it works
+        
+        System.out.println("\n--- OOP Concepts Used ---");
+        System.out.println("✓ Abstraction: Abstract Vehicle class & Drivable interface");
+        System.out.println("✓ Inheritance: Car & Motorcycle extend Vehicle");
+        System.out.println("✓ Encapsulation: Private fields with public getters");
+        System.out.println("✓ Polymorphism: Different honk() implementations");
+    }
+}
+
+
